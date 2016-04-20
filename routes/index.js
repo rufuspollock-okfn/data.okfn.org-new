@@ -155,10 +155,6 @@ exports.tools = function(req, res) {
   res.render('/tools/index.html', {});
 };
 
-exports.toolsDpCreate = function(req, res) {
-  res.render('tools/dp/create.html');
-};
-
 exports.toolsDpValidateJSON = function(req, res) {
   // handle base urls as well as full urls
   var dpurl = spec.parse(req.query.url).dataPackageJsonUrl;

@@ -68,7 +68,7 @@ app.get('/doc', routes.doc);
 app.get('/doc/:page', routes.doc);
 // Tools
 app.get('/tools', routes.tools);
-app.get('/tools/create', routes.toolsDpCreate);
+app.get('/tools/create', redirect('http://datapackagist.okfnlabs.org/'));
 app.get('/tools/validate.json', routes.toolsDpValidateJSON);
 app.get('/tools/validate', routes.toolsDpValidate);
 app.get('/tools/view', routes.toolsDpView);
