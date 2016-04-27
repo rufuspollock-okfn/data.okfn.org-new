@@ -1,4 +1,8 @@
 var express = require('express')
+  , methodOverride = require('method-override')
+  , bodyParser = require('body-parser')
+  , logger = require('morgan')
+  , favicon = require('serve-favicon')
   , path = require('path')
   , nunjucks = require('nunjucks')
   , bodyParser = require('body-parser')
@@ -20,12 +24,12 @@ app.set('port', process.env.PORT || 5000);
 app.set('views', __dirname + '/views');
 // app.set('view engine', 'html');
 // app.engine('html', require('hbs').__express);
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(CORSSupport);
+// app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(CORSSupport);
 app.use(express.static(path.join(__dirname, 'public')));
 
 var env = new nunjucks.Environment(new nunjucks.FileSystemLoader('views'));
