@@ -11,6 +11,7 @@ var express = require('express')
   ;
 
 var app = express();
+var redirect_base = 'http://frictionlessdata.io'
 
 //CORS middleware
 var CORSSupport = function(req, res, next) {
@@ -49,30 +50,51 @@ app.use(function(req, res, next) {
   }
 });
 
-
-app.get('/', routes.home);
+app.get('/', function(req, res) {
+  res.redirect(redirect_base + '');
+});
+app.get('/contact', function(req, res) {
+  res.redirect(redirect_base + '/get-involved/#contact');
+});
 app.get('/about/contribute', function(req, res) {
   res.redirect('/contribute');
 });
-app.get('/contribute', routes.contribute);
-app.get('/publish', redirect('/doc/publish'));
-app.get('/roadmap', routes.roadmap);
-app.get('/roadmap/core-datasets', function(req, res) {
-  res.render('core-datasets.html', {title: 'Core Datasets'});
+app.get('/contribute', function(req, res) {
+  res.redirect(redirect_base + '/get-involved/');
 });
+app.get('/publish', redirect('/doc/publish'));
+app.get('/roadmap', function(req, res) {
+  res.redirect(redirect_base + '/roadmap/');
+});
+app.get('/roadmap/core-datasets', routes.data);
 app.get('/vision', function(req, res) {
-  routes.renderMarkdown('doc/vision.md', 'A Frictionless Data Ecosystem', res);
+  res.redirect(redirect_base + '/about/');
 });
 // Standards and patterns
-app.get('/standards', routes.standards);
-app.get('/standards/data-package', redirect('/doc/data-package'));
-app.get('/standards/simple-data-format', redirect('/doc/tabular-data-package'));
-app.get('/standards/csv', redirect('/doc/csv'));
+app.get('/standards', function(req, res) {
+  res.redirect(redirect_base + '/data-packages/');
+});
+app.get('/standards/data-package', function(req, res) {
+  res.redirect(redirect_base + '/data-packages/');
+});
+app.get('/standards/simple-data-format', function(req, res) {
+  res.redirect(redirect_base + '/guides/tabular-data-package/');
+});
+app.get('/standards/csv', function(req, res) {
+  res.redirect(redirect_base + '/guides/csv/');
+});
 // Docs (patterns, standards etc)
-app.get('/doc', routes.doc);
-app.get('/doc/:page', routes.doc);
+app.get('/doc', function(req, res) {
+  res.redirect(redirect_base + '/guides/');
+});
+app.get('/doc/:page', function(req, res) {
+  res.redirect(redirect_base + '/guides/');
+});
 // Tools
-app.get('/tools', routes.tools);
+app.get('/tools', function(req, res) {
+  res.redirect(redirect_base + '/tools/');
+});
+
 app.get('/tools/create', redirect('http://datapackagist.okfnlabs.org/'));
 app.get('/tools/validate.json', routes.toolsDpValidateJSON);
 app.get('/tools/validate', routes.toolsDpValidate);
