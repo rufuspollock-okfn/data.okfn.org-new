@@ -28,6 +28,7 @@ my.Views.DataFile = Backbone.View.extend({
     var $viewer = this.$el;
     $viewer.html('Loading View <img src="http://assets.okfn.org/images/icons/ajaxload-circle.gif" />');
     var table = my.dataPackageResourceToDataset(this.model.toJSON(), resourceIndex);  
+    
     var spec = {
       "description": "testing",
       "data": {"url": table.attributes.remoteurl, "formatType":"csv"},
@@ -36,47 +37,46 @@ my.Views.DataFile = Backbone.View.extend({
         "x": {"field": DataViews[resourceIndex].state.group, "type": "temporal"},
         "y": {"field": DataViews[resourceIndex].state.series[0], "type": "quantitative"}
       },
-      "config": {"cell": {"width": 1000,"height": 500}, "background": "#FFFFFF"},
+      "config": {"cell": {"width": 900,"height": 450}, "background": "#FFFFFF"},
     };
     var embedSpec = {
       mode: "vega-lite",
       spec: spec
     };
     
-    vg.embed('.viewer', embedSpec);
+    vg.embed('.vis', embedSpec);
     
-    //alert(table.attributes.path)
-    //table.fetch().done(function() {
-    //  var gridView = {
-    //      id: 'grid',
-    //      label: 'Table',
-    //      type: 'SlickGrid',
-    //      state: {
-    //        fitColumns: true
-    //      }
-    //    };
-    //  DataViews.push(gridView); 
-    //  var viewsForRecline = _.map(DataViews, function(viewInfo) {
-    //    var out = _.clone(viewInfo);
-    //    out.view = new recline.View[viewInfo.type]({
-    //      model: table,
-    //      state: viewInfo.state
-    //    });
-    //    if (!out.label) {
-    //      out.label = out.id;
-    //    }
-    //    return out;
-    //  });
-    //
-    //  var explorer = new recline.View.MultiView({
-    //    model: table,
-    //    views: viewsForRecline,
-    //    sidebarViews: []
-    //  });
-    //  $viewer.empty().append(explorer.el);
-    //
-    //  table.query({size: table.recordCount});
-    //});
+    table.fetch().done(function() {
+      var gridView = {
+          id: 'grid',
+          label: 'Table',
+          type: 'SlickGrid',
+          state: {
+            fitColumns: true
+          }
+        };
+      DataViews.push(gridView); 
+      var viewsForRecline = _.map(DataViews, function(viewInfo) {
+        var out = _.clone(viewInfo);
+        out.view = new recline.View[viewInfo.type]({
+          model: table,
+          state: viewInfo.state 
+        });
+        if (!out.label) {
+          out.label = out.id;
+        }
+        return out;
+      });
+      
+      var explorer = new recline.View.MultiView({
+        model: table,
+        views: viewsForRecline,
+        sidebarViews: []
+      });
+      $viewer.empty().append(explorer.el);
+    
+      table.query({size: table.recordCount});
+    });
     return this;
   }
 });

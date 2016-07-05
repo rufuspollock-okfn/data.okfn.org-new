@@ -64,9 +64,20 @@
   </div>
 
   <hr />
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+      $("button").click(function(){
+          $(".vis").toggle();
+          $(".viewer").toggle();
+      });
+  });
+  </script>
+  
+  <button>Switch View</button>
+  <div class="vis" style="display: none"></div>
   <div class="viewer"></div>
-
+  
   <div class="resources" id="data">
     <h2>Data Files</h2>
     <div class="resource-listing">
