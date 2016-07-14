@@ -64,19 +64,22 @@
   </div>
 
   <hr />
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>
   $(document).ready(function(){
       $("button").click(function(){
           $(".vis").toggle();
           $(".viewer").toggle();
+          $("#search").toggle();
       });
   });
   </script>
   
   <button>Switch View</button>
-  <div class="vis" style="display: none"></div>
-  <div class="viewer"></div>
+  <input id="search" placeholder="Search" type="search" style="float:right; display: none">
+  <div class="viewer" style="display: none"></div>
+  <div class="vis"></div>
   
   <div class="resources" id="data">
     <h2>Data Files</h2>
@@ -112,7 +115,10 @@
     {% if resource.format == 'geojson' %}
       <div class="js-show-geojson show-geojson" data-resource-index="{{loop.index0}}"></div>
       {% else %}
-      <div class="js-show-recline-grid show-recline-grid" data-resource-index="{{loop.index0}}"></div>
+      <input id="search_field" placeholder="Search" type="search" style="float:right" data-resource-index="{{loop.index0}}">
+      <br>
+      <br>
+      <div class="js-show-handsontable-grid" data-resource-index="{{loop.index0}}"></div>
     {% endif %}
 
       <h4>Field Information</h4>

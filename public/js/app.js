@@ -71,29 +71,49 @@ function datasetShowSetup() {
   }
 
   // create a grid view for each resource in the page
-  $('.js-show-recline-grid').each(function(idx, $el) {
+  $('.js-show-handsontable-grid').each(function(idx, $el) {
     var resourceIndex = $($el).data('resource-index');
     var reclineDataset = Catalog.dataPackageResourceToDataset(DataPackageData, resourceIndex);
-    reclineDataset.fetch().done(function() {
-      var multiViewGridView = new recline.View.MultiView({
-        el: $el,
-        model: reclineDataset,
-        views: [{
-          id: 'grid',
-          label: 'Data Table',
-          view: new recline.View.SlickGrid({
-            model: reclineDataset,
-            state: {
-              fitColumns: true
-            }
-          })
-        }],
-        sidebarViews: []
-      });
-      reclineDataset.query({size: reclineDataset.recordCount});
+    var hot;
+    
+    CSV.fetch({ 
+      "url": reclineDataset.attributes.remoteurl
+    }).done(function(dataset) {
+      var options = {
+        data: dataset.records,
+        colHeaders: dataset.fields,
+        readOnly: true,
+        
+        height: function(){
+          if (dataset.records.length > 16) {return 432;}
+        },
+        colWidths: 47,
+        rowWidth: 27,
+        stretchH: 'all',
+        columnSorting: true,
+        search: true
+      };
+      hot = new Handsontable($el, options);
+    });
+      
+    // search option 
+    var index = 1;
+    var search = $($el).siblings('input')[0];
+    Handsontable.Dom.addEvent(search,'keyup', function (event) {
+      var queryResult = hot.search.query(this.value);
+      if (queryResult) {
+        if (event.keyCode == 13 & index < queryResult.length) {
+          hot.selectCell(queryResult[index].row,queryResult[index].col);
+          index ++;
+        }else{
+          hot.selectCell(queryResult[0].row,queryResult[0].col);
+          index = 1
+        }
+      }
+      hot.render();
     });
   });
-
+  
   $('.js-show-geojson').each(function(idx, $el) {
     $el = $($el);
     var resourceIndex = $el.data('resource-index');
