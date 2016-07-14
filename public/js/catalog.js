@@ -27,41 +27,75 @@ my.Views.DataFile = Backbone.View.extend({
   render: function(resourceIndex) {
     var $viewer = this.$el;
     $viewer.html('Loading View <img src="http://assets.okfn.org/images/icons/ajaxload-circle.gif" />');
-    var table = my.dataPackageResourceToDataset(this.model.toJSON(), resourceIndex);
-    table.fetch().done(function() {
-      var gridView = {
-          id: 'grid',
-          label: 'Table',
-          type: 'SlickGrid',
-          state: {
-            fitColumns: true
+    var table = my.dataPackageResourceToDataset(this.model.toJSON(), resourceIndex);  
+    
+    var vegaSpec = my.VegaLiteSpec(table,DataViews,resourceIndex);
+    var embedSpec = {
+      mode: "vega-lite",
+      spec: vegaSpec
+    };
+    var vis = $viewer.siblings('div.vis')[0];
+    vg.embed(vis, embedSpec);
+      
+    CSV.fetch({ 
+      "url": table.attributes.remoteurl
+    }).done(function(dataset) {
+      var options = {
+        data: dataset.records,
+        colHeaders: dataset.fields,
+        readOnly: true,
+        width: 1136,
+        height: function(){
+          if (dataset.records.length > 16) {return 432;}
+        },
+        colWidths: 47,
+        rowWidth: 27,
+        stretchH: 'all',
+        columnSorting: true,
+        search: true
+      };
+      $viewer.empty();
+      var hot = new Handsontable($viewer[0], options);
+      
+      var index = 1;
+      var search = $viewer.siblings('input')[0];
+      Handsontable.Dom.addEvent(search,'keyup', function (event) {
+        var queryResult = hot.search.query(this.value);
+        if (queryResult) {
+          if (event.keyCode == 13 & index < queryResult.length) {
+            // to make jump on next result on "enter" hit
+            hot.selectCell(queryResult[index].row,queryResult[index].col);
+            index ++;
+          }else{
+            // to make jumb to the first searched result
+            hot.selectCell(queryResult[0].row,queryResult[0].col);
+            index = 1;
           }
-        };
-      DataViews.push(gridView); 
-      var viewsForRecline = _.map(DataViews, function(viewInfo) {
-        var out = _.clone(viewInfo);
-        out.view = new recline.View[viewInfo.type]({
-          model: table,
-          state: viewInfo.state
-        });
-        if (!out.label) {
-          out.label = out.id;
         }
-        return out;
+        hot.render();
       });
-
-      var explorer = new recline.View.MultiView({
-        model: table,
-        views: viewsForRecline,
-        sidebarViews: []
-      });
-      $viewer.empty().append(explorer.el);
-
-      table.query({size: table.recordCount});
     });
     return this;
   }
 });
+
+my.VegaLiteSpec = function(table,DataViews,resourceIndex) {
+  var vegaSpec = {
+    "description": "testing",
+    "data": {"url": table.attributes.remoteurl, "formatType":"csv"},
+    "mark": "line",
+    "encoding": {
+      "x": {
+        "field":DataViews[resourceIndex].state.group,
+        "type": "temporal",
+        "axis": {"labelAngle": 0},
+        },
+      "y": {"field": DataViews[resourceIndex].state.series[0], "type": "quantitative"}
+    },
+    "config": {"cell": {"width": 1095,"height": 450}, "background": "#FFFFFF"},
+  };
+  return vegaSpec;
+};
 
 my.Views.Search = Backbone.View.extend({
   events: {
@@ -105,7 +139,7 @@ my.dataPackageResourceToDataset = function(dataPackage, resourceIndex) {
   }
   var dataset = new recline.Model.Dataset(reclineInfo);
   return dataset;
-}
+};
 
 }(Catalog, jQuery));
 
