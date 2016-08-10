@@ -66,7 +66,9 @@ app.get('/publish', redirect('/doc/publish'));
 app.get('/roadmap', function(req, res) {
   res.redirect(redirect_base + '/roadmap/');
 });
-app.get('/roadmap/core-datasets', routes.data);
+app.get('/roadmap/core-datasets', function(req, res) {
+  res.render('core-datasets.html', {title: 'Core Datasets'})
+});
 app.get('/vision', function(req, res) {
   res.redirect(redirect_base + '/about/');
 });
@@ -84,6 +86,9 @@ app.get('/standards/csv', function(req, res) {
   res.redirect(redirect_base + '/guides/csv/');
 });
 // Docs (patterns, standards etc)
+app.get('/doc/core-data-curators', function(req, res) {
+  routes.renderMarkdown('doc/core-data-curators.md', 'A Frictionless Data Ecosystem', res);
+});
 app.get('/doc', function(req, res) {
   res.redirect(redirect_base + '/guides/');
 });
