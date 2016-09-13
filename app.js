@@ -92,6 +92,12 @@ app.get('/doc/core-data-curators', function(req, res) {
 app.get('/doc', function(req, res) {
   res.redirect(redirect_base + '/guides/');
 });
+app.get('/doc/data-package', function(req, res) {
+  res.redirect(redirect_base + '/data-packages/');
+});
+app.get('/doc/csv', function(req, res) {
+  res.redirect(redirect_base + '/guides/csv/');
+});
 app.get('/doc/:page', function(req, res) {
   res.redirect(redirect_base + '/guides/');
 });
