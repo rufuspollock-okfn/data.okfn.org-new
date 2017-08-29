@@ -146,9 +146,9 @@ app.get('/community/:username/:repo', function(req, res) {
   res.redirect(url);
 });
 
-function redirect(path, base='https://datahub.io') {
+function redirect(path) {
   return function(req, res) {
-    let dest = base + path;
+    let dest = 'https://datahub.io' + path;
     if (req.params[0]) {
       dest += '/' + req.params[0]
     }
