@@ -50,9 +50,7 @@ app.use(function(req, res, next) {
   }
 });
 
-app.get('/', function(req, res) {
-  res.redirect(redirect_base + '');
-});
+app.get('/', redirect('/'));
 app.get('/contact', function(req, res) {
   res.redirect(redirect_base + '/get-involved/#contact');
 });
@@ -62,10 +60,8 @@ app.get('/about/contribute', function(req, res) {
 app.get('/contribute', function(req, res) {
   res.redirect(redirect_base + '/get-involved/');
 });
-app.get('/publish', redirect('/doc/publish'));
-app.get('/roadmap', function(req, res) {
-  res.redirect(redirect_base + '/roadmap/');
-});
+app.get('/publish', redirectOld('/doc/publish'));
+app.get('/roadmap', redirect('/docs'));
 app.get('/roadmap/core-datasets', function(req, res) {
   res.render('core-datasets.html', {title: 'Core Datasets'})
 });
@@ -73,9 +69,7 @@ app.get('/vision', function(req, res) {
   res.redirect(redirect_base + '/about/');
 });
 // Standards and patterns
-app.get('/standards', function(req, res) {
-  res.redirect(redirect_base + '/data-packages/');
-});
+app.get('/standards', redirect('/docs/data-packages'));
 app.get('/standards/data-package', function(req, res) {
   res.redirect(redirect_base + '/data-packages/');
 });
@@ -102,11 +96,9 @@ app.get('/doc/:page', function(req, res) {
   res.redirect(redirect_base + '/guides/');
 });
 // Tools
-app.get('/tools', function(req, res) {
-  res.redirect(redirect_base + '/tools/');
-});
+app.get('/tools', redirect('/'));
 
-app.get('/tools/create', redirect('http://datapackagist.okfnlabs.org/'));
+app.get('/tools/create', redirectOld('http://datapackagist.okfnlabs.org/'));
 app.get('/tools/validate.json', routes.toolsDpValidateJSON);
 app.get('/tools/validate', routes.toolsDpValidate);
 app.get('/tools/view', routes.toolsDpView);
@@ -115,6 +107,14 @@ app.get('/tools/dataproxy', routes.toolsDataProxy);
 app.get('/data', routes.data);
 app.get('/data.json', routes.dataJson);
 app.get('/data/search', routes.dataSearch);
+
+// new redirects for datahub.io
+app.get('/data/core/*', redirect('/core'))
+app.get('/data/datasets/*', redirect('/core'))
+app.get('/data/*', function(req, res) {
+  res.redirect(302, 'https://datahub.io')
+}) // end of redirects for datahub.io
+
 // backwards compatibility
 app.get('/data/:name/datapackage.json', function(req, res) {
   res.redirect('/data/core/' + req.params.name + '/datapackage.json');
@@ -146,7 +146,17 @@ app.get('/community/:username/:repo', function(req, res) {
   res.redirect(url);
 });
 
-function redirect(url) {
+function redirect(path, base='https://datahub.io') {
+  return function(req, res) {
+    let dest = base + path;
+    if (req.params[0]) {
+      dest += '/' + req.params[0]
+    }
+    res.redirect(302, dest);
+  }
+}
+
+function redirectOld(url) {
   return function(req, res) {
     res.redirect(url);
   }
@@ -163,4 +173,3 @@ routes.bootApp(function(err) {
 });
 
 exports.app = app;
-
