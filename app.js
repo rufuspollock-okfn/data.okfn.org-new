@@ -109,8 +109,8 @@ app.get('/data.json', routes.dataJson);
 app.get('/data/search', routes.dataSearch);
 
 // new redirects for datahub.io
-app.get('/data/core/*', redirect('/core'))
-app.get('/data/datasets/*', redirect('/core'))
+app.get(['/data/core', '/data/core/*'], redirect('/core'))
+app.get(['/data/datasets', '/data/datasets/*'], redirect('/core'))
 app.get('/data/*', function(req, res) {
   res.redirect(302, 'https://datahub.io')
 }) // end of redirects for datahub.io
