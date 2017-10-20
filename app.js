@@ -112,7 +112,12 @@ app.get('/data/search', routes.dataSearch);
 app.get(['/data/core', '/data/core/*'], redirect('/core'))
 app.get(['/data/datasets', '/data/datasets/*'], redirect('/core'))
 app.get('/data/*', function(req, res) {
-  res.redirect(302, 'https://datahub.io')
+  var pathParts = req.params[0].split('/')
+  if (pathParts.length === 1) {
+    res.redirect(302, 'https://datahub.io/core/' + pathParts[0])
+  } else {
+    res.redirect(302, 'https://datahub.io')
+  }
 }) // end of redirects for datahub.io
 
 // backwards compatibility
