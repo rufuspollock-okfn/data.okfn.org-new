@@ -68,7 +68,7 @@ app.get('/vision', function(req, res) {
   res.redirect(redirect_base + '/about/');
 });
 // Standards and patterns
-
+app.get('/standards', redirect('/docs/data-packages'));
 app.get('/standards/data-package', function(req, res) {
   res.redirect(redirect_base + '/data-packages/');
 });
@@ -78,7 +78,7 @@ app.get('/standards/simple-data-format', function(req, res) {
 app.get('/standards/csv', function(req, res) {
   res.redirect(redirect_base + '/guides/csv/');
 });
-// Docs (patterns, standards etc) - new redirects for datahub.io/docs
+// Docs (patterns, standards etc) - new redirects for datahub.io
 app.get('/doc/core-data-curators', redirect('/docs/core-data/curators'))
 app.get('/doc/data-package', redirect('/docs/data-packages'))
 app.get('/doc/csv', redirect('/docs/data-packages/csv'))
