@@ -60,7 +60,6 @@ app.get('/about/contribute', function(req, res) {
 app.get('/contribute', function(req, res) {
   res.redirect(redirect_base + '/get-involved/');
 });
-app.get('/publish', redirectOld('/doc/publish'));
 app.get('/roadmap', redirect('/docs'));
 app.get('/roadmap/core-datasets', function(req, res) {
   res.render('core-datasets.html', {title: 'Core Datasets'})
@@ -69,7 +68,7 @@ app.get('/vision', function(req, res) {
   res.redirect(redirect_base + '/about/');
 });
 // Standards and patterns
-app.get('/standards', redirect('/docs/data-packages'));
+
 app.get('/standards/data-package', function(req, res) {
   res.redirect(redirect_base + '/data-packages/');
 });
@@ -79,22 +78,18 @@ app.get('/standards/simple-data-format', function(req, res) {
 app.get('/standards/csv', function(req, res) {
   res.redirect(redirect_base + '/guides/csv/');
 });
-// Docs (patterns, standards etc)
-app.get('/doc/core-data-curators', function(req, res) {
-  routes.renderMarkdown('doc/core-data-curators.md', 'A Frictionless Data Ecosystem', res);
-});
-app.get('/doc', function(req, res) {
-  res.redirect(redirect_base + '/guides/');
-});
-app.get('/doc/data-package', function(req, res) {
-  res.redirect(redirect_base + '/data-packages/');
-});
-app.get('/doc/csv', function(req, res) {
-  res.redirect(redirect_base + '/guides/csv/');
-});
-app.get('/doc/:page', function(req, res) {
-  res.redirect(redirect_base + '/guides/');
-});
+// Docs (patterns, standards etc) - new redirects for datahub.io/docs
+app.get('/doc/core-data-curators', redirect('/docs/core-data/curators'))
+app.get('/doc/data-package', redirect('/docs/data-packages'))
+app.get('/doc/csv', redirect('/docs/data-packages/csv'))
+app.get('/doc/:page', redirect('/docs'))
+app.get('/doc/publish-any', redirect('/docs/data-packages/publish-any'))
+app.get('/doc/publish-faq', redirect('/docs/data-packages/publish-faq'))
+app.get('/doc/publish-geo', redirect('/docs/data-packages/publish-geo'))
+app.get('/doc/publish-online', redirect('/docs/data-packages/publish-online'))
+app.get('/doc/publish-tabular', redirect('/docs/data-packages/publish-tabular'))
+app.get('/doc/tabular-data-package', redirect('/docs/data-packages/tabular'))
+
 // Tools
 app.get('/tools', redirect('/'));
 
