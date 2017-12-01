@@ -60,6 +60,7 @@ app.get('/about/contribute', function(req, res) {
 app.get('/contribute', function(req, res) {
   res.redirect(redirect_base + '/get-involved/');
 });
+app.get('/publish', redirect('/docs/data-packages/publish'));
 app.get('/roadmap', redirect('/docs'));
 app.get('/roadmap/core-datasets', function(req, res) {
   res.render('core-datasets.html', {title: 'Core Datasets'})
