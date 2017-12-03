@@ -7,24 +7,10 @@ var app = require('../app.js').app;
 
 describe('Content', function(){
   it('home page', function(done){
-    request(app)
-      .get('/')
-      .expect(302)
-      .end(function(err, res) {
-        assert(res.headers.location, 'https://datahub.io')
-        done();
-      })
-      ;
+    testRedirect(done, '/', 'https://datahub.io');
   });
   it('data package page', function(done){
-    request(app)
-      .get('/doc/data-package')
-      .expect(302)
-      .end(function(err, res) {
-        assert(res.header.location, 'https://datahub.io/docs/data-packages')
-        done();
-      })
-      ;
+    testRedirect(done, '/doc/data-package', 'https://datahub.io/docs/data-packages')
   });
 });
 
@@ -106,3 +92,32 @@ describe('GET /tools/view', function(){
 //       });
 //   });
 // });
+
+describe('redirects for docs to datahub.io', function() {
+  it('/doc => /docs', function(done) {
+    var basePath = '/doc';
+    testRedirect(done, basePath, 'https://datahub.io/docs');
+  })
+
+  it('/doc/publish => /docs/data-packages/publish', function(done) {
+    var publish = '/doc/publish'; // assume it is enough to test
+    testRedirect(done, publish, 'https://datahub.io/docs/data-packages/publish');
+  })
+
+  it('/doc/:page => /docs', function(done) {
+    var anyOtherPath = '/doc/other';
+    testRedirect(done, anyOtherPath, 'https://datahub.io/docs');
+  })
+})
+
+function testRedirect(done, url, shouldRedirectTo) {
+  request(app)
+    .get(url)
+    .expect(302)
+    .end(function(err, res) {
+      if (err) done(err);
+
+      assert(res.headers.location, shouldRedirectTo);
+      done();
+    })
+}

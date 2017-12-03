@@ -80,16 +80,18 @@ app.get('/standards/csv', function(req, res) {
   res.redirect(redirect_base + '/guides/csv/');
 });
 // Docs (patterns, standards etc) - new redirects for datahub.io
+app.get('/doc', redirect('/docs'))
 app.get('/doc/core-data-curators', redirect('/docs/core-data/curators'))
 app.get('/doc/data-package', redirect('/docs/data-packages'))
 app.get('/doc/csv', redirect('/docs/data-packages/csv'))
-app.get('/doc/:page', redirect('/docs'))
 app.get('/doc/publish-any', redirect('/docs/data-packages/publish-any'))
 app.get('/doc/publish-faq', redirect('/docs/data-packages/publish-faq'))
 app.get('/doc/publish-geo', redirect('/docs/data-packages/publish-geo'))
 app.get('/doc/publish-online', redirect('/docs/data-packages/publish-online'))
 app.get('/doc/publish-tabular', redirect('/docs/data-packages/publish-tabular'))
+app.get('/doc/publish', redirect('/docs/data-packages/publish'))
 app.get('/doc/tabular-data-package', redirect('/docs/data-packages/tabular'))
+app.get('/doc/:page', redirect('/docs'))
 
 // Tools
 app.get('/tools', redirect('/'));
