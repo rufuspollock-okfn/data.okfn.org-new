@@ -98,7 +98,7 @@ app.get('/tools', redirect('/'));
 
 app.get('/tools/create', redirectOld('http://datapackagist.okfnlabs.org/'));
 app.get('/tools/validate.json', routes.toolsDpValidateJSON);
-app.get('/tools/validate', routes.toolsDpValidate);
+app.get('/tools/validate', redirect('/tools/validate'));
 app.get('/tools/view', routes.toolsDpView);
 app.get('/tools/dataproxy', routes.toolsDataProxy);
 // Data
