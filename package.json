@@ -20,7 +20,7 @@
     "marked": "",
     "method-override": "^2.3.5",
     "morgan": "^1.6.1",
-    "nunjucks": "0.1.8",
+    "nunjucks": "3.2.0",
     "request": "",
     "serve-favicon": "^2.3.0",
     "stream-transform": "",
